@@ -13,22 +13,22 @@ import sys
 def parse(line, type, isPreviousP):
     """Function that parses a piece of string and returns the generated HTML"""
     line = " ".join(line)
-    for item in re.findall("\*\*[\S][\w\s,\.\[\]\(\)]*[\S]\*\*", line):
+    for item in re.findall(r"\*\*[\S][\w\s,\.\[\]\(\)]*[\S]\*\*", line):
         line = line.replace(item, "<b>" + item[2:-2] + "</b>")
-    for item in re.findall("\*\*[\S]+\*\*", line):
+    for item in re.findall(r"\*\*[\S]+\*\*", line):
         line = line.replace(item, "<b>" + item[2:-2] + "</b>")
-    for item in re.findall("(^|[\s])(__[^_\s]__)([\s]|$)", line):
+    for item in re.findall(r"(^|[\s])(__[^_\s]__)([\s]|$)", line):
         line = line.replace(item[1], "<em>" + item[1][2:-2] + "</em>")
-    for item in re.findall("(^|[\s])(__[^\s_][^_]*[^\s_]__)([\s]|$)", line):
+    for item in re.findall(r"(^|[\s])(__[^\s_][^_]*[^\s_]__)([\s]|$)", line):
         line = line.replace(item[1], "<em>" + item[1][2:-2] + "</em>")
-    for item in re.findall("\[\[[\w\s,\.]+\]\]", line):
+    for item in re.findall(r"\[\[[\w\s,\.]+\]\]", line):
         line = line.replace(item, hashlib.md5(item[2:-2].encode()).hexdigest())
-    for item in re.findall("\(\([\w\s,\.]+\)\)", line):
+    for item in re.findall(r"\(\([\w\s,\.]+\)\)", line):
         line = line.replace(item, item[2:-2].translate({ord('c'): None, ord('C'): None}))
 
     if type == "li":
         headings = line.split()
-        if line != "" and re.match("^#+$", headings[0]) and len(headings[0]) < 7:
+        if line != "" and re.match(r"^#+$", headings[0]) and len(headings[0]) < 7:
             size_h = len(headings[0])
             line = "<h{}>".format(size_h) + " ".join(headings[1:]) + "</h{}>".format(size_h)
         return "<li>" + line + "</li>"
@@ -54,7 +54,7 @@ def parseline(lines):
             close_p = False
             continue
         new_line = line.split()
-        if re.match("^#+$", new_line[0]) and len(new_line[0]) < 7:
+        if re.match(r"^#+$", new_line[0]) and len(new_line[0]) < 7:
             if not closed_ul:
                 generated_html += "</ul>\n"
                 closed_ul = True
@@ -78,7 +78,7 @@ def parseline(lines):
         elif "*" == new_line[0]:
             if not closed_ul:
                 generated_html += "</ul>\n"
-                closed_ol = True
+                closed_ul = True
             if closed_ol:
                 generated_html += "<ol>\n" + parse(new_line[1:], 'li', False)
                 closed_ol = False
