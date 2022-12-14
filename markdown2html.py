@@ -5,6 +5,7 @@
 Script that takes an argument 2 strings.
 """
 
+import hashlib
 import os
 import re
 import sys
@@ -12,14 +13,24 @@ import sys
 def parse(line, type, isPreviousP):
     """Function that parses a piece of string and returns the generated HTML"""
     line = " ".join(line)
-    if re.match(".*\*\*.+\*\*.*", line):
-        line = line.replace("**", "<b>", 1)
-        line = line.replace("**", "</b>", 2)
-    elif re.match(".*__.+__.*", line):
-        print("hello")
-        line = line.replace("__", "<em>", 1)
-        line = line.replace("__", "</em>", 2)
+    for item in re.findall("\*\*[\S][\w\s,\.\[\]\(\)]*[\S]\*\*", line):
+        line = line.replace(item, "<b>" + item[2:-2] + "</b>")
+    for item in re.findall("\*\*[\S]+\*\*", line):
+        line = line.replace(item, "<b>" + item[2:-2] + "</b>")
+    for item in re.findall("(^|[\s])(__[^_\s]__)([\s]|$)", line):
+        line = line.replace(item[1], "<em>" + item[1][2:-2] + "</em>")
+    for item in re.findall("(^|[\s])(__[^\s_][^_]*[^\s_]__)([\s]|$)", line):
+        line = line.replace(item[1], "<em>" + item[1][2:-2] + "</em>")
+    for item in re.findall("\[\[[\w\s,\.]+\]\]", line):
+        line = line.replace(item, hashlib.md5(item[2:-2].encode()).hexdigest())
+    for item in re.findall("\(\([\w\s,\.]+\)\)", line):
+        line = line.replace(item, item[2:-2].translate({ord('c'): None, ord('C'): None}))
+
     if type == "li":
+        headings = line.split()
+        if line != "" and re.match("^#+$", headings[0]) and len(headings[0]) < 7:
+            size_h = len(headings[0])
+            line = "<h{}>".format(size_h) + " ".join(headings[1:]) + "</h{}>".format(size_h)
         return "<li>" + line + "</li>"
     elif not isPreviousP and type == '':
         return "<p>\n" + line
@@ -43,7 +54,13 @@ def parseline(lines):
             close_p = False
             continue
         new_line = line.split()
-        if re.match("#+", new_line[0]):
+        if re.match("^#+$", new_line[0]) and len(new_line[0]) < 7:
+            if not closed_ul:
+                generated_html += "</ul>\n"
+                closed_ul = True
+            elif not closed_ol:
+                generated_html += "</ol>\n"
+                closed_ol = True
             if len(line) > 1:
                 size_h = len(new_line[0])
             generated_html += "<h{}>".format(size_h) + parse(new_line[1:], 'h', False) + "</h{}>".format(size_h)
