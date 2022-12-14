@@ -66,6 +66,9 @@ def parseline(lines):
             generated_html += "<h{}>".format(size_h) + parse(new_line[1:], 'h', False) + "</h{}>".format(size_h)
             close_p = True
         elif "-" == new_line[0]:
+            if not closed_ol:
+                generated_html += "</ol>\n"
+                closed_ol = True
             if closed_ul:
                 generated_html += "<ul>\n" + parse(new_line[1:], 'li', False)
                 closed_ul = False
@@ -73,6 +76,9 @@ def parseline(lines):
                 generated_html += parse(new_line[1:], 'li', False)
             close_p = True
         elif "*" == new_line[0]:
+            if not closed_ul:
+                generated_html += "</ul>\n"
+                closed_ol = True
             if closed_ol:
                 generated_html += "<ol>\n" + parse(new_line[1:], 'li', False)
                 closed_ol = False
