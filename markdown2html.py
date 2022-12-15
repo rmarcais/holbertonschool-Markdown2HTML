@@ -55,6 +55,10 @@ def parseline(lines):
             continue
         new_line = line.split()
         if re.match(r"^#+$", new_line[0]) and len(new_line[0]) < 7:
+            if close_p and is_previous_p:
+                generated_html += "</p>\n"
+                close_p = False
+                is_previous_p = False
             if not closed_ul:
                 generated_html += "</ul>\n"
                 closed_ul = True
@@ -66,6 +70,10 @@ def parseline(lines):
             generated_html += "<h{}>".format(size_h) + parse(new_line[1:], 'h', False) + "</h{}>".format(size_h)
             close_p = True
         elif "-" == new_line[0]:
+            if close_p and is_previous_p:
+                generated_html += "</p>\n"
+                close_p = False
+                is_previous_p = False
             if not closed_ol:
                 generated_html += "</ol>\n"
                 closed_ol = True
