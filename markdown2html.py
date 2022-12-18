@@ -18,9 +18,9 @@ def parse(line, type, isPreviousP):
         line = line.replace(item, "<b>" + item[2:-2] + "</b>")
     for item in re.findall(r"\*\*[\S]+\*\*", line):
         line = line.replace(item, "<b>" + item[2:-2] + "</b>")
-    for item in re.findall(r"(^|[\s])(__[^_\s]__)", line):
+    for item in re.findall(r"(^|[\s]|)(__[^_\s]__)", line):
         line = line.replace(item[1], "<em>" + item[1][2:-2] + "</em>")
-    for item in re.findall(r"(^|[\s])(__[^\s_][^_]*[^\s_]__)", line):
+    for item in re.findall(r"(^|[\s]|)(__[^\s_][^_]*[^\s_]__)", line):
         line = line.replace(item[1], "<em>" + item[1][2:-2] + "</em>")
     for item in re.findall(r"\[\[[\w\s,\.]+\]\]", line):
         line = line.replace(item, hashlib.md5(item[2:-2].encode()).hexdigest())
