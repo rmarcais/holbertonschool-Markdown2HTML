@@ -10,6 +10,7 @@ import os
 import re
 import sys
 
+
 def parse(line, type, isPreviousP):
     """Function that parses a piece of string and returns the generated HTML"""
     line = " ".join(line)
@@ -24,13 +25,16 @@ def parse(line, type, isPreviousP):
     for item in re.findall(r"\[\[[\w\s,\.]+\]\]", line):
         line = line.replace(item, hashlib.md5(item[2:-2].encode()).hexdigest())
     for item in re.findall(r"\(\([\w\s,\.]+\)\)", line):
-        line = line.replace(item, item[2:-2].translate({ord('c'): None, ord('C'): None}))
+        line = line.replace(item, item[2:-2].translate({ord('c'): None,
+                                                        ord('C'): None}))
 
     if type == "li":
         headings = line.split()
-        if line != "" and re.match(r"^#+$", headings[0]) and len(headings[0]) < 7:
+        if (line != "" and re.match(r"^#+$", headings[0]) and
+                len(headings[0]) < 7):
             size_h = len(headings[0])
-            line = "<h{}>".format(size_h) + " ".join(headings[1:]) + "</h{}>".format(size_h)
+            line = "<h{}>".format(size_h)
+            line += " ".join(headings[1:]) + "</h{}>".format(size_h)
         return "<li>" + line + "</li>"
     elif not isPreviousP and type == '':
         return "<p>\n" + line
@@ -38,6 +42,7 @@ def parse(line, type, isPreviousP):
         return "<br/>\n" + line
     elif type == "h":
         return line
+
 
 def parseline(lines):
     """Function that parses the line and returns the generated HTML"""
@@ -67,7 +72,9 @@ def parseline(lines):
                 closed_ol = True
             if len(line) > 1:
                 size_h = len(new_line[0])
-            generated_html += "<h{}>".format(size_h) + parse(new_line[1:], 'h', False) + "</h{}>".format(size_h)
+            generated_html += "<h{}>".format(size_h)
+            generated_html += parse(new_line[1:], 'h', False)
+            generated_html += "</h{}>".format(size_h)
             close_p = True
         elif "-" == new_line[0]:
             if close_p and is_previous_p:
@@ -112,10 +119,9 @@ def parseline(lines):
         closed_ol = True
     if close_p and is_previous_p:
         generated_html += "</p>\n"
-        close_p = True
+        close_p = False
+        is_previous_p = False
     return generated_html
-            
-
 
 
 if __name__ == "__main__":
