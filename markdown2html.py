@@ -14,13 +14,13 @@ import sys
 def parse(line, type, isPreviousP):
     """Function that parses a piece of string and returns the generated HTML"""
     line = " ".join(line)
-    for item in re.findall(r"\*\*[\S][\w\s,\.\[\]\(\)\*]*[\S]\*\*", line):
+    for item in re.findall(r"\*\*[\S][\w\s,\.\[\]\(\)]*[\S]\*\*", line):
         line = line.replace(item, "<b>" + item[2:-2] + "</b>")
     for item in re.findall(r"\*\*[\S]+\*\*", line):
         line = line.replace(item, "<b>" + item[2:-2] + "</b>")
-    for item in re.findall(r"(^|[\s])(__[^_\s]__)([\s]|$)", line):
+    for item in re.findall(r"(^|[\s])(__[^_\s]__)", line):
         line = line.replace(item[1], "<em>" + item[1][2:-2] + "</em>")
-    for item in re.findall(r"(^|[\s])(__[^\s_][^_]*[^\s_]__)([\s]|$)", line):
+    for item in re.findall(r"(^|[\s])(__[^\s_][^_]*[^\s_]__)", line):
         line = line.replace(item[1], "<em>" + item[1][2:-2] + "</em>")
     for item in re.findall(r"\[\[[\w\s,\.]+\]\]", line):
         line = line.replace(item, hashlib.md5(item[2:-2].encode()).hexdigest())
