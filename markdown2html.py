@@ -16,8 +16,8 @@ def parse(line, type, isPreviousP):
     line = " ".join(line)
     for item in re.findall(r"\*\*[\w\s,\.\[\]\(\)]*\*\*", line):
         line = line.replace(item, "<b>" + item[2:-2] + "</b>")
-    for item in re.findall(r"\*\*[\S]+\*\*", line):
-        line = line.replace(item, "<b>" + item[2:-2] + "</b>")
+    # for item in re.findall(r"\*\*[\S]+\*\*", line):
+        # line = line.replace(item, "<b>" + item[2:-2] + "</b>")
     for item in re.findall(r"(^|[\s])(__[^_\s]__)([\s]|$)", line):
         line = line.replace(item[1], "<em>" + item[1][2:-2] + "</em>")
     for item in re.findall(r"(^|[\s])(__[^\s_][^_]*[^\s_]__)([\s]|$)", line):
@@ -70,6 +70,7 @@ def parseline(lines):
             elif not closed_ol:
                 generated_html += "</ol>\n"
                 closed_ol = True
+            size_h = 1
             if len(line) > 1:
                 size_h = len(new_line[0])
             generated_html += "<h{}>".format(size_h)
