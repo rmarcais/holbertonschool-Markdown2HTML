@@ -14,7 +14,7 @@ import sys
 def parse(line, type, isPreviousP):
     """Function that parses a piece of string and returns the generated HTML"""
     line = " ".join(line)
-    for item in re.findall(r"\*\*[\S][\w\s,\.\[\]\(\)]*[\S]\*\*", line):
+    for item in re.findall(r"\*\*[\w\s,\.\[\]\(\)]*\*\*", line):
         line = line.replace(item, "<b>" + item[2:-2] + "</b>")
     for item in re.findall(r"\*\*[\S]+\*\*", line):
         line = line.replace(item, "<b>" + item[2:-2] + "</b>")
