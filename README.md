@@ -15,3 +15,39 @@ It’s time to code a Markdown to HTML!
 - All your files must be executable
 - All your modules should be documented: `python3 -c 'print(__import__("my_module").__doc__)'`
 - Your code should not be executed when imported (by using `if __name__ == "__main__":`)
+
+## Context
+
+If we have this `README.md`:
+```
+# My title
+- He**l**lo
+- Bye
+
+Hello
+
+I'm **a** text
+with __2 lines__
+
+((I will live in Caracas))
+
+But it's [[private]]
+
+```
+
+The content of our `README.html` should be:
+```
+# My title
+- He**l**lo
+- Bye
+
+Hello
+
+I'm **a** text
+with __2 lines__
+
+((I will live in Caracas))
+
+But it's [[private]]
+
+```
