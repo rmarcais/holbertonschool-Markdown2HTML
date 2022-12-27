@@ -51,10 +51,10 @@ I'm <b>a</b> text
 with <em>2 lines</em>
 </p>
 <p>
-I will live in araas
+I will live in araas  ('c' and 'C' removed)
 </p>
 <p>
-But it's 2c17c6393771ee3048ae34d6b380c5ec
+But it's 2c17c6393771ee3048ae34d6b380c5ec (converted in MD5(lowercase))
 </p>
 <p>
 So cool!
